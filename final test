@@ -1,0 +1,78 @@
+1. 교수 테이블 (Professor Table)
+
+CREATE TABLE 교수 (
+    교번 VARCHAR(10) PRIMARY KEY,        -- 교번을 기본키로 설정
+    교수명 VARCHAR(100) NOT NULL         -- 교수명은 NULL을 허용하지 않음
+);
+
+
+2. 강의실 테이블 (Classroom Table)
+
+CREATE TABLE 강의실 (
+    강의실번호 VARCHAR(10) PRIMARY KEY,   -- 강의실번호를 기본키로 설정
+    좌석수 INT NOT NULL                  -- 좌석수는 NULL을 허용하지 않음
+);
+
+
+3. 과목 테이블 (Subject Table)
+
+CREATE TABLE 과목 (
+    과목번호 VARCHAR(10) PRIMARY KEY,     -- 과목번호를 기본키로 설정
+    과목명 VARCHAR(100) NOT NULL          -- 과목명은 NULL을 허용하지 않음
+);
+
+
+4. 학생 테이블 (Student Table)
+
+CREATE TABLE 학생 (
+    학번 VARCHAR(10) PRIMARY KEY,         -- 학번을 기본키로 설정
+    학생명 VARCHAR(100) NOT NULL          -- 학생명은 NULL을 허용하지 않음
+);
+
+
+5. 강의 테이블 (Lecture Table)
+
+CREATE TABLE 강의 (
+    강의ID INT PRIMARY KEY,               -- 강의ID를 기본키로 설정
+    교수ID VARCHAR(10),                   -- 교수ID는 교수 테이블의 교번을 참조
+    강의실번호 VARCHAR(10),               -- 강의실번호는 강의실 테이블의 강의실번호를 참조
+    과목번호 VARCHAR(10),                 -- 과목번호는 과목 테이블의 과목번호를 참조
+    FOREIGN KEY (교수ID) REFERENCES 교수(교번) ON DELETE CASCADE,  -- 교수와의 외래키 관계 설정
+    FOREIGN KEY (강의실번호) REFERENCES 강의실(강의실번호) ON DELETE CASCADE,  -- 강의실과의 외래키 관계 설정
+    FOREIGN KEY (과목번호) REFERENCES 과목(과목번호) ON DELETE CASCADE  -- 과목과의 외래키 관계 설정
+);
+
+
+6. 수강신청 테이블 (Enrollment Table)
+
+CREATE TABLE 수강신청 (
+    학번 VARCHAR(10),                     -- 학번은 학생 테이블의 학번을 참조
+    과목번호 VARCHAR(10),                 -- 과목번호는 과목 테이블의 과목번호를 참조
+    신청날짜 DATE NOT NULL,               -- 신청날짜는 NULL을 허용하지 않음
+    PRIMARY KEY (학번, 과목번호),         -- 학번과 과목번호를 복합 기본키로 설정
+    FOREIGN KEY (학번) REFERENCES 학생(학번) ON DELETE CASCADE,  -- 학생과의 외래키 관계 설정
+    FOREIGN KEY (과목번호) REFERENCES 과목(과목번호) ON DELETE CASCADE  -- 과목과의 외래키 관계 설정
+);
+
+
+7. 수강취소 테이블 (Cancellation Table)
+
+CREATE TABLE 수강취소 (
+    학번 VARCHAR(10),                     -- 학번은 학생 테이블의 학번을 참조
+    과목번호 VARCHAR(10),                 -- 과목번호는 과목 테이블의 과목번호를 참조
+    취소날짜 DATE NOT NULL,               -- 취소날짜는 NULL을 허용하지 않음
+    PRIMARY KEY (학번, 과목번호),         -- 학번과 과목번호를 복합 기본키로 설정
+    FOREIGN KEY (학번) REFERENCES 학생(학번) ON DELETE CASCADE,  -- 학생과의 외래키 관계 설정
+    FOREIGN KEY (과목번호) REFERENCES 과목(과목번호) ON DELETE CASCADE  -- 과목과의 외래키 관계 설정
+);
+
+
+8. 멘토링 테이블 (Mentoring Table)
+
+CREATE TABLE 멘토링 (
+    멘토학번 VARCHAR(10),                 -- 멘토학번은 학생 테이블의 학번을 참조
+    멘티학번 VARCHAR(10),                 -- 멘티학번은 학생 테이블의 학번을 참조
+    PRIMARY KEY (멘토학번, 멘티학번),     -- 멘토학번과 멘티학번을 복합 기본키로 설정
+    FOREIGN KEY (멘토학번) REFERENCES 학생(학번) ON DELETE CASCADE,  -- 멘토와의 외래키 관계 설정
+    FOREIGN KEY (멘티학번) REFERENCES 학생(학번) ON DELETE CASCADE  -- 멘티와의 외래키 관계 설정
+);
